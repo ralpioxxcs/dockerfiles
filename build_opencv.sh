@@ -1,5 +1,6 @@
 #!/bin/bash
-cmake -DCMAKE_BUILD_TYPE=Release \
+cmake -H. -BRelease
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DWITH_TBB=ON \
     -DWITH_QT=ON \
