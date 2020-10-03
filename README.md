@@ -1,7 +1,13 @@
 # env_docker-opencv
-OpenCV development environment on Docker
+This is docker container for setting OpenCV development c++ environment
 
-## build
+## Description
+* opencv 3.4.6
+* ubuntu 18.04
+* qt base
+
+## How to run
+just command below
 ```
-docker build . 
+docker run -it placket/ubuntu-opencv
 ```
