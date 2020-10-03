@@ -13,10 +13,16 @@ RUN apt install -y \
   cmake \
   git \
   wget \
-  unzip
+  unzip \
+  gdb
 
 # install opencv dependency package
-RUN apt install -y libavformat-dev libavcodec-dev libavfilter-dev libswscale-dev libjpeg-dev libpng-dev
+RUN apt install -y libavformat-dev libavcodec-dev libavfilter-dev libswscale-dev libjpeg-dev libpng-dev pkg-config
+
+## install option (gtk or qt)
+ARG WITH_QT
+RUN if [ "${WITH_QT}" = "ON" ]; then apt install -y qt5-default; fi
+ENV WITH_QT=$WITH_QT
 
 WORKDIR /opencv
 ENV OPENCV_VERSION="3.4.6"
@@ -25,9 +31,14 @@ RUN wget -O ${OPENCV_VERSION}.zip https://github.com/opencv/opencv/archive/${OPE
   && mkdir -p opencv-${OPENCV_VERSION}/build \
   && cd opencv-${OPENCV_VERSION}/build
 
-RUN pwd && ls -al
+#RUN pwd && ls -al
 
 # build opencv
 ADD build_opencv.sh /opencv/opencv-${OPENCV_VERSION}/build_opencv.sh
 RUN cd /opencv/opencv-3.4.6 && ./build_opencv.sh
 RUN rm -rf build_opencv.sh
+
+# clean process
+WORKDIR /
+RUN rm -rf /var/lib/apt/lists/*
+RUN rm -rf ${OPENCV_VERSION}.zip opencv
