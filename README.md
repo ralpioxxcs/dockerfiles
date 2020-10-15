@@ -11,3 +11,8 @@ just command below
 ```
 docker run -it placket/ubuntu-opencv
 ```
+
+or build
+```
+docker build -t ubuntu-opencv .
+```
