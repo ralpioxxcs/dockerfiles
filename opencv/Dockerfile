@@ -9,7 +9,7 @@ RUN sed -i 's/extras.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
 RUN apt-get update
 
 # install essential packages
-ARG OPENCV_VERSION="3.6.9"
+ARG OPENCV_VERSION="3.4.6"
 ARG INSTALL_PATH="/usr/local"
 ARG CONCURRENCY=4
 RUN apt install -y build-essential cmake curl \
