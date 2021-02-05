@@ -13,7 +13,7 @@ ARG OPENCV_VERSION="3.6.9"
 ARG INSTALL_PATH="/usr/local"
 ARG CONCURRENCY=4
 RUN apt install -y build-essential cmake curl \
-    libavformat-dev lbavcodec-dev libswscale-dev libv4l-dev libjpeg-dev libpng-dev pkg-config
+    libavformat-dev libavcodec-dev libswscale-dev libv4l-dev libjpeg-dev libpng-dev pkg-config
 RUN curl -sL https://github.com/Itseez/opencv/archive/$OPENCV_VERSION.tar.gz | tar xvz -C /tmp
 
 WORKDIR /tmp/opencv-$OPENCV_VERSION
