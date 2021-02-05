@@ -1,5 +1,5 @@
 # base os imgae
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS builder
 MAINTAINER placket
 
 # change apt server
@@ -14,9 +14,7 @@ RUN apt install -y \
   cmake \
   git \
   wget \
-  unzip \
-  gdb \
-  imagemagick
+  unzip
 
 # install opencv dependency package
 RUN apt install -y  libavformat-dev \ 
@@ -47,6 +45,12 @@ WORKDIR /
 RUN apt-get autoclean autoremove
 RUN rm -rf /var/lib/apt/lists/*
 RUN rm -rf /opencv
+
+# multi stage
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /opencv/install .
 
 # default command.
 CMD ["bash"]

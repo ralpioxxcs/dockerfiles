@@ -1,7 +1,7 @@
 #!/bin/bash
 cmake -H. -BRelease \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DCMAKE_INSTALL_PREFIX=../install \
     -DINSTALL_C_EXAMPLES=OFF \
     -DINSTALL_PYTHON_EXAMPLES=OFF \
     -DOPENCV_ENABLE_NONFREE=ON \
