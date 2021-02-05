@@ -19,7 +19,7 @@ RUN curl -sL https://github.com/Itseez/opencv/archive/$OPENCV_VERSION.tar.gz | t
 WORKDIR /tmp/opencv-$OPENCV_VERSION
 RUN cmake -H. -BRelease \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH} \
     -DBUILD_DOCS=OFF \
     -DBUILD_EXAMPLES=OFF \
     -DBUILD_opencv_apps=OFF \
@@ -44,8 +44,8 @@ RUN cmake -H. -BRelease \
     -DBUILD_JPEG=ON  \
     -DBUILD_TIFF=ON \
     -DBUILD_PNG=ON
-WORKDIR /tmp/opencv-$OPENCV_VERSION/Release
-RUN make -j$CONCURRENCY && make install
+WORKDIR /tmp/opencv-${OPENCV_VERSION}/Release
+RUN make -j${CONCURRENCY} && make install
 
 # config
 RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf
