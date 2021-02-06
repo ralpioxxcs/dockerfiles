@@ -57,14 +57,12 @@ RUN apt-get autoclean && apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /app
-COPY main.cpp Lenna.png /app
-RUN g++ -Wl, -Bstatic -static-libgcc -std=c++11 \
-    main.cpp -o /app \
-    $(pkg-config --cflags --libs -static opencv)
+COPY main.cpp Lenna.png /app/
+RUN g++ -Bstatic -std=c++11 main.cpp -o app `pkg-config --cflags --libs --static opencv`
     
 # multi stage
 FROM ubuntu    
 COPY --from=builder /app /bin/app
 
 # default command.
-CMD ["/bin/app/a.out"]
+CMD ["/bin/app/app"]
