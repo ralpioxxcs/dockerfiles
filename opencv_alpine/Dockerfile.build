@@ -37,13 +37,16 @@ RUN mkdir -p /tmp/opencv4 && \
     cd /tmp/opencv4 && \
     curl -Lo opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip && \
     unzip -q opencv.zip && \
-    rm opencv.zip
+    curl -Lo opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip && \
+	  unzip -q opencv_contrib.zip && \
+	  rm opencv.zip opencv_contrib.zip
 
 RUN mkdir -p /tmp/opencv4/opencv-${OPENCV_VERSION}/build && \
     cd /tmp/opencv4/opencv-${OPENCV_VERSION}/build && \
     cmake \
     -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv/opencv_contrib-${OPENCV_VERSION}/modules \
     -D WITH_FFMPEG=NO \
     -D WITH_IPP=NO \
     -D INSTALL_C_EXAMPLES=NO \
