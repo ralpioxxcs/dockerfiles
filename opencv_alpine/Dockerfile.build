@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-glibc
+FROM golang:1.15-alpine
 
 LABEL maintainer="ralpioxxcs"
 
@@ -66,17 +66,16 @@ RUN mkdir -p /tmp/opencv/opencv-${OPENCV_VERSION}/build && \
     -D BUILD_opencv_python3=NO \
     -D BUILD_opencv_wechat_qrcode=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON .. && \
-    make -j6 && \
+    make -j8 && \
     make install && \
-    ldconfig && \
     cd && \
     rm -rf /tmp/opencv
 
-RUN apk del ${PKG} && \
-    rm -rf /var/cache/apk/*
+#RUN apk del ${PKG} && \
+#    rm -rf /var/cache/apk/*
 
-ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
-ENV LD_LIBRARY_PATH /usr/local/lib
+ENV PKG_CONFIG_PATH /usr/local/lib64/pkgconfig
+ENV LD_LIBRARY_PATH /usr/local/lib64
 ENV CGO_CPPFLAGS -I/usr/local/include
 ENV CGO_CXXFLAGS "--std=c++1z"
-ENV CGO_LDFLAGS "-L/usr/local/lib -lopencv_core -lopencv_face -lopencv_videoio -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_video -lopencv_dnn -lopencv_xfeatures2d -lopencv_plot -lopencv_tracking"
+ENV CGO_LDFLAGS "-L/usr/local/lib64 -lopencv_core -lopencv_face -lopencv_videoio -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_video -lopencv_dnn -lopencv_xfeatures2d -lopencv_plot -lopencv_tracking"

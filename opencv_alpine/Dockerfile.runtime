@@ -14,7 +14,8 @@ ARG PACKAGE="libstdc++ \
              libwebp \
              libwebp-dev \
              tiff \
-             libavc1394"
+             libavc1394 \
+             ffmpeg-libs"
 
 RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
     sed -i 's/dl-cdn.alpinelinux.org/ftp.tsukuba.wide.ad.jp\/Linux/g' /etc/apk/repositories
@@ -22,10 +23,10 @@ RUN apk update && \
     apk add --no-cache ${PACKAGE} && \
     rm -rf /var/cache/apk/*
 
-ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
-ENV LD_LIBRARY_PATH /usr/local/lib
+ENV PKG_CONFIG_PATH /usr/local/lib64/pkgconfig
+ENV LD_LIBRARY_PATH /usr/local/lib64
 ENV CGO_CPPFLAGS -I/usr/local/include
 ENV CGO_CXXFLAGS "--std=c++1z"
-ENV CGO_LDFLAGS "-L/usr/local/lib -lopencv_core -lopencv_face -lopencv_videoio -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_video -lopencv_dnn -lopencv_xfeatures2d -lopencv_plot -lopencv_tracking"
+ENV CGO_LDFLAGS "-L/usr/local/lib64 -lopencv_core -lopencv_face -lopencv_videoio -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_video -lopencv_dnn -lopencv_xfeatures2d -lopencv_plot -lopencv_tracking"
 
 
