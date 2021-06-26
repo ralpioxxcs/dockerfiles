@@ -1,72 +1,78 @@
-FROM golang:1.15-alpine
+FROM frolvlad/alpine-glibc
 
 LABEL maintainer="ralpioxxcs"
 
 ARG OPENCV_VERSION=4.5.2
-ARG PACKAGE="ca-certificates \
-               git \
-               cmake \
-               pkgconf \
-               build-base \
-               musl-dev \
-               alpine-sdk \
-               make \
-               gcc \
-               g++ \
-               libc-dev \
-               linux-headers \
-               libjpeg-turbo \
-               libpng \
-               libwebp \
-               libwebp-dev \
-               tiff \
-               libavc1394 \
-               openblas \
-               libgphoto2 \
-               gstreamer \
-               gst-plugins-base"
+ARG PKG="build-base \
+        ca-certificates \
+        cmake \
+        coreutils \
+        curl \ 
+        freetype-dev \
+        ffmpeg-dev \
+        ffmpeg-libs \
+        gcc \
+        g++ \
+        git \
+        gettext \
+        lcms2-dev \
+        libavc1394-dev \
+        libc-dev \
+        libffi-dev \
+        libjpeg-turbo \
+        libjpeg-turbo-dev \
+        libpng \
+        libpng-dev \
+        libressl-dev \
+        libwebp \
+        libwebp-dev \
+        tiff-dev \
+        linux-headers \
+        musl \
+        openssl \
+        unzip \
+        zlib-dev"
 
-# change repository mirror (update speed issue)
-RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
-    sed -i 's/dl-cdn.alpinelinux.org/ftp.tsukuba.wide.ad.jp\/Linux/g' /etc/apk/repositories
-RUN apk update && apk add --no-cache ${PACKAGE}
+RUN apk update && apk upgrade && apk --no-cache add ${PKG}
 
-WORKDIR /tmp/opencv4
+WORKDIR /tmp/opencv
 
-RUN mkdir -p /tmp/opencv4 && \
-    cd /tmp/opencv4 && \
+RUN mkdir -p /tmp/opencv && \
+    cd /tmp/opencv && \
     curl -Lo opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip && \
     unzip -q opencv.zip && \
     curl -Lo opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip && \
 	  unzip -q opencv_contrib.zip && \
 	  rm opencv.zip opencv_contrib.zip
 
-RUN mkdir -p /tmp/opencv4/opencv-${OPENCV_VERSION}/build && \
-    cd /tmp/opencv4/opencv-${OPENCV_VERSION}/build && \
+RUN mkdir -p /tmp/opencv/opencv-${OPENCV_VERSION}/build && \
+    cd /tmp/opencv/opencv-${OPENCV_VERSION}/build && \
     cmake \
     -D CMAKE_BUILD_TYPE=RELEASE \
+    -D WITH_IPP=OFF \ 
+    -D WITH_OPENGL=OFF \
+    -D WITH_QT=OFF \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv/opencv_contrib-${OPENCV_VERSION}/modules \
-    -D WITH_FFMPEG=NO \
-    -D WITH_IPP=NO \
-    -D INSTALL_C_EXAMPLES=NO \
-    -D INSTALL_PYTHON_EXAMPLES=NO \
-    -D BUILD_ANDROID_EXAMPLES=NO \
-    -D BUILD_DOCS=NO \
-    -D BUILD_TESTS=NO \
-    -D BUILD_PERF_TESTS=NO \
-    -D BUILD_EXAMPLES=NO \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    -D WITH_JASPER=OFF \
+    -D BUILD_DOCS=OFF \
+    -D BUILD_EXAMPLES=OFF \
+    -D BUILD_TESTS=OFF \
+    -D BUILD_PERF_TESTS=OFF \
     -D BUILD_opencv_java=NO \
     -D BUILD_opencv_python=NO \
     -D BUILD_opencv_python2=NO \
     -D BUILD_opencv_python3=NO \
-    -D OPENCV_GENERATE_PKGCONFIG=YES .. && \
-    make -j4 && \
+    -D BUILD_opencv_wechat_qrcode=OFF \
+    -D OPENCV_GENERATE_PKGCONFIG=ON .. && \
+    make -j6 && \
     make install && \
+    ldconfig && \
     cd && \
-    rm -rf /tmp/opencv4
+    rm -rf /tmp/opencv
 
-RUN apk del ${DEV_DEPS} && \
+RUN apk del ${PKG} && \
     rm -rf /var/cache/apk/*
 
 ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
