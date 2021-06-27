@@ -1,0 +1,18 @@
+FROM placket/ubuntu-opencv:build-stage as builder
+FROM ubuntu:18.04
+
+LABEL maintainer="ralpioxxcs"
+
+COPY --from=builder /usr/local/lib /usr/local/lib
+COPY --from=builder /usr/local/lib/pkgconfig/opencv4.pc /usr/local/lib/pkgconfig/opencv4.pc
+COPY --from=builder /usr/local/include/opencv4/opencv2 /usr/local/include/opencv4/opencv2
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    pkg-config \ 
+    libavcodec-dev \
+    libavformat-dev \ 
+    libswscale-dev \ 
