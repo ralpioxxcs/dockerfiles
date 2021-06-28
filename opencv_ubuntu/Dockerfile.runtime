@@ -10,9 +10,8 @@ COPY --from=builder /usr/local/include/opencv4/opencv2 /usr/local/include/opencv
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    pkg-config \ 
     libavcodec-dev \
     libavformat-dev \ 
     libswscale-dev \ 
+    libdc1394-22-dev \
+    libgtk2.0-0
