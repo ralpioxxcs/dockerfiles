@@ -7,5 +7,5 @@ docker build -t [image_name] --build-arg=OPENCV_VERISON=[version] -f Dockerfile.
 
 ## runtime stage image
 ```
-docker build -t [image_name] -f Dockerfile.runtime.
+docker build -t [image_name] -f Dockerfile.runtime .
 ```
